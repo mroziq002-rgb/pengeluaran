@@ -21,8 +21,8 @@
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Open slamet.html",
-            "file": "d:\\web\\slamet.html"
+            "name": "Open index.html",
+            "file": "d:\\web\\index.html"
         }
     ]
 }
