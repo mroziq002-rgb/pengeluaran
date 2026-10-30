@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - DompetKu</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="auth.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: "DM Sans", sans-serif;
+        }
+
+        .forest-page {
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            color: white;
+            background:
+                linear-gradient(135deg, rgba(8, 47, 35, 0.64), rgba(7, 24, 18, 0.18)),
+                url("https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1920&q=88") center/cover no-repeat;
+        }
+
+        .forest-page::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 78% 18%, rgba(209, 250, 229, 0.22), transparent 18%),
+                linear-gradient(180deg, rgba(3, 18, 13, 0.08), rgba(3, 18, 13, 0.62));
+            pointer-events: none;
+        }
+
+        .sun-rays {
+            position: absolute;
+            width: 520px;
+            height: 520px;
+            top: -280px;
+            right: -90px;
+            border-radius: 999px;
+            background: radial-gradient(circle, rgba(254, 240, 138, 0.30), rgba(254, 240, 138, 0.05) 38%, transparent 68%);
+            filter: blur(2px);
+            animation: breathe 8s ease-in-out infinite;
+        }
+
+        .mist {
+            position: absolute;
+            left: -10%;
+            bottom: -70px;
+            width: 120%;
+            height: 260px;
+            opacity: 0.42;
+            filter: blur(24px);
+            background:
+                radial-gradient(ellipse at 20% 60%, rgba(236, 253, 245, 0.95), transparent 42%),
+                radial-gradient(ellipse at 70% 70%, rgba(220, 252, 231, 0.72), transparent 38%);
+            animation: drift 14s ease-in-out infinite alternate;
+        }
+
+        .leaf {
+            position: absolute;
+            z-index: 2;
+            width: 150px;
+            height: 150px;
+            border-radius: 100% 0 100% 0;
+            background: linear-gradient(135deg, rgba(8, 69, 43, 0.86), rgba(52, 120, 74, 0.18));
+            box-shadow: inset -12px -8px 30px rgba(4, 35, 24, 0.45);
+            opacity: 0.72;
+        }
+
+        .leaf-one {
+            left: -74px;
+            top: 9%;
+            transform: rotate(28deg);
+        }
+
+        .leaf-two {
+            right: -92px;
+            bottom: 9%;
+            transform: rotate(208deg) scale(1.15);
+        }
+
+        .login-card {
+            position: relative;
+            z-index: 5;
+            width: min(440px, 100%);
+            padding: 42px;
+            border: 1px solid rgba(255, 255, 255, 0.30);
+            border-radius: 28px;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.19), rgba(255, 255, 255, 0.08));
+            box-shadow: 0 24px 80px rgba(3, 23, 15, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+        }
+
+        .brand-mark {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 18px;
+            display: grid;
+            place-items: center;
+            border-radius: 18px;
+            color: #143d2a;
+            font-size: 26px;
+            background: rgba(236, 253, 245, 0.88);
+            box-shadow: 0 12px 30px rgba(5, 46, 31, 0.26);
+            transform: rotate(-4deg);
+        }
+
+        .login-card h1 {
+            font-family: "Playfair Display", serif;
+            font-size: 42px;
+            line-height: 1;
+            letter-spacing: -0.02em;
+            text-align: center;
+            text-shadow: 0 3px 20px rgba(4, 29, 19, 0.25);
+        }
+
+        .login-card .subtitle {
+            margin: 10px 0 30px;
+            text-align: center;
+            color: rgba(240, 253, 244, 0.78);
+            font-size: 14px;
+        }
+
+        .field-label {
+            display: block;
+            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.88);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .field-wrap {
+            position: relative;
+        }
+
+        .field-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(220, 252, 231, 0.70);
+            pointer-events: none;
+        }
+
+        .login-input {
+            width: 100%;
+            height: 52px;
+            border: 1px solid rgba(255, 255, 255, 0.24);
+            border-radius: 14px;
+            outline: none;
+            padding: 0 16px 0 44px;
+            color: white;
+            background: rgba(7, 38, 27, 0.38);
+            transition: 180ms ease;
+        }
+
+        .login-input::placeholder { color: rgba(236, 253, 245, 0.50); }
+
+        .login-input:focus {
+            border-color: rgba(187, 247, 208, 0.78);
+            background: rgba(7, 38, 27, 0.52);
+            box-shadow: 0 0 0 4px rgba(187, 247, 208, 0.11);
+        }
+
+        .login-button {
+            width: 100%;
+            height: 54px;
+            margin-top: 6px;
+            border: 0;
+            border-radius: 14px;
+            color: #143d2a;
+            font-weight: 700;
+            cursor: pointer;
+            background: linear-gradient(135deg, #dcfce7, #86efac);
+            box-shadow: 0 14px 28px rgba(5, 46, 31, 0.30);
+            transition: 180ms ease;
+        }
+
+        .login-button:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.05);
+            box-shadow: 0 18px 34px rgba(5, 46, 31, 0.36);
+        }
+
+        .login-button:disabled { cursor: wait; opacity: 0.72; }
+
+        #loginError {
+            border: 1px solid rgba(254, 202, 202, 0.24);
+            border-radius: 12px;
+            color: #fee2e2;
+            background: rgba(127, 29, 29, 0.32);
+        }
+
+        @keyframes drift {
+            from { transform: translateX(-2%) scale(1); }
+            to { transform: translateX(4%) scale(1.08); }
+        }
+
+        @keyframes breathe {
+            50% { transform: scale(1.12); opacity: 0.76; }
+        }
+
+        @media (max-width: 520px) {
+            .forest-page { padding: 16px; }
+            .login-card { padding: 32px 22px; border-radius: 22px; }
+            .login-card h1 { font-size: 36px; }
+        }
+    </style>
+</head>
+<body>
+    <main class="forest-page">
+        <div class="sun-rays"></div>
+        <div class="mist"></div>
+        <div class="leaf leaf-one"></div>
+        <div class="leaf leaf-two"></div>
+
+        <section class="login-card" aria-label="Form login DompetKu">
+            <div class="brand-mark" aria-hidden="true">🌿</div>
+            <h1>DompetKu</h1>
+            <p class="subtitle">Masuk dan kelola keuanganmu dengan tenang</p>
+
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label for="username" class="field-label">Username</label>
+                    <div class="field-wrap">
+                        <span class="field-icon" aria-hidden="true">◉</span>
+                        <input id="username" name="username" type="text" autocomplete="username"
+                            placeholder="Masukkan username" required class="login-input">
+                    </div>
+                </div>
+                <div>
+                    <label for="password" class="field-label">Password</label>
+                    <div class="field-wrap">
+                        <span class="field-icon" aria-hidden="true">⌁</span>
+                        <input id="password" name="password" type="password" autocomplete="current-password"
+                            placeholder="Masukkan password" required class="login-input">
+                    </div>
+                </div>
+                <p id="loginError" class="hidden px-3 py-2 text-sm"></p>
+                <button id="loginButton" type="submit" class="login-button">
+                    Masuk ke Hutan
+                </button>
+            </form>
+        </section>
+    </main>
+
+    <script>
+        if (isLoginSessionValid()) {
+            window.location.replace("index.html");
+        }
+
+        const form = document.getElementById("loginForm");
+        const usernameInput = document.getElementById("username");
+        const passwordInput = document.getElementById("password");
+        const errorElement = document.getElementById("loginError");
+        const loginButton = document.getElementById("loginButton");
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            loginButton.disabled = true;
+            loginButton.textContent = "Memeriksa...";
+            errorElement.classList.add("hidden");
+
+            if (await verifyCredentials(usernameInput.value.trim(), passwordInput.value)) {
+                createLoginSession();
+                window.location.replace("index.html");
+                return;
+            }
+
+            passwordInput.value = "";
+            passwordInput.focus();
+            errorElement.textContent = "Username atau password salah.";
+            errorElement.classList.remove("hidden");
+            loginButton.disabled = false;
+            loginButton.textContent = "Masuk";
+        });
+    </script>
+</body>
+</html>
